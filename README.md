@@ -23,5 +23,6 @@ jobs:
       env:
         REQUIRED_REVIEW_TEAM_ID: "12345"
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        STATUS_CONTEXT: "Your custom status context." (optional. defaults to "Required review")
 ```
 

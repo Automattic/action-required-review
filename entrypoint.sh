@@ -21,6 +21,10 @@ if [[ -z "$REQUIRED_REVIEW_TEAM_ID" ]]; then
   exit 1
 fi
 
+if [[ -z "$STATUS_CONTEXT" ]]; then
+  STATUS_CONTEXT="Required review"
+fi
+
 URI="https://api.github.com"
 API_HEADER="Accept: application/vnd.github.v3+json"
 AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
@@ -28,8 +32,16 @@ AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
 action=$(jq --raw-output .action "$GITHUB_EVENT_PATH")
 state=$(jq --raw-output .review.state "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+sha=$(jq --raw-output .pull_request.head.sha "$GITHUB_EVENT_PATH")
 
-check_for_required_review() {
+containsElement () {
+  local e match="$1"
+  shift
+  for e; do [[ "$e" == "$match" ]] && return 0; done
+  return 1
+}
+
+check_for_required_review () {
   body=$(curl -sSL -H "${AUTH_HEADER}" -H "${API_HEADER}" "${URI}/repos/${GITHUB_REPOSITORY}/pulls/${number}/reviews?per_page=100")
   reviews=$(echo "$body" | jq --raw-output '.[] | @base64')
   # 887802 is the ID for the Automattic org
@@ -44,24 +56,44 @@ check_for_required_review() {
     required_team_usernames+=( "$login" )
   done
 
-  pass_fail="fail"
+  status="pending"
+  description="Pending approval."
+
   for r in $reviews; do
     review=$(echo "$r" | base64 -d)
+
     review_login=$(echo "$review" | jq --raw-output '.user["login"]')
     review_state=$(echo "$review" | jq --raw-output '.state')
 
-    for i in "${required_team_usernames[@]}"; do
-      if [ "$i" == "$review_login" ] && [ "$review_state" == 'APPROVED' ]; then
-        pass_fail="true"
+    # Only care about reviews from required team.
+    # These will loop in chronological order, ending with the most recent
+    if [[ "${required_team_usernames[@]}" =~ "${review_login}" ]]; then
+      if [ "$review_state" == 'APPROVED' ]; then
+        status="success"
+        description="Accepted!"
+      elif [ "$review_state" == 'CHANGES_REQUESTED' ]; then
+        status="failure"
+        description="Changes requested."
+      else
+        status="pending"
+        description="Pending approval."
       fi
-    done
+    fi
   done
 
-  if [ "$pass_fail" == "true" ]; then
-    echo "approved!"
+  curl -sSL \
+        -H "${AUTH_HEADER}" \
+        -H "${API_HEADER}" \
+        -X POST \
+        -H "Content-Type: application/json" \
+        -d "{\"state\":\"${status}\", \"target_url\":\"https://github.com/Automattic/jetpack/pull/${number}/commits/${sha}\", \"description\":\"${description}\", \"context\":\"${STATUS_CONTEXT}\" }" \
+        "${URI}/repos/${GITHUB_REPOSITORY}/statuses/${sha}"
+
+  if [ "$status" == "success" ]; then
+    echo "PR approved required review!"
     exit 0
   else
-    echo "failed!"
+    echo "Still pending required review."
     # Intentionally no status exit.
   fi
 }
