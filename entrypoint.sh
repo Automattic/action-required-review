@@ -34,13 +34,6 @@ state=$(jq --raw-output .review.state "$GITHUB_EVENT_PATH")
 number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
 sha=$(jq --raw-output .pull_request.head.sha "$GITHUB_EVENT_PATH")
 
-containsElement () {
-  local e match="$1"
-  shift
-  for e; do [[ "$e" == "$match" ]] && return 0; done
-  return 1
-}
-
 check_for_required_review () {
   body=$(curl -sSL -H "${AUTH_HEADER}" -H "${API_HEADER}" "${URI}/repos/${GITHUB_REPOSITORY}/pulls/${number}/reviews?per_page=100")
   reviews=$(echo "$body" | jq --raw-output '.[] | @base64')
@@ -89,13 +82,8 @@ check_for_required_review () {
         -d "{\"state\":\"${status}\", \"target_url\":\"https://github.com/Automattic/jetpack/pull/${number}/commits/${sha}\", \"description\":\"${description}\", \"context\":\"${STATUS_CONTEXT}\" }" \
         "${URI}/repos/${GITHUB_REPOSITORY}/statuses/${sha}"
 
-  if [ "$status" == "success" ]; then
-    echo "PR approved required review!"
-    exit 0
-  else
-    echo "Still pending required review."
-    # Intentionally no status exit.
-  fi
+  echo "$status"
+  echo "$description"
 }
 
 check_for_required_review
