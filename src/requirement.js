@@ -55,6 +55,7 @@ function buildReviewerFilter( config, teamConfig, indent ) {
 	switch ( op ) {
 		case 'any-of':
 		case 'all-of':
+		case 'two-of':
 			// These ops require an array of teams/objects.
 			if ( ! Array.isArray( arg ) ) {
 				throw new RequirementError( `Expected an array of teams, got ${ typeof arg }`, {
@@ -100,7 +101,23 @@ function buildReviewerFilter( config, teamConfig, indent ) {
 		};
 	}
 
-	// WTF?
+	if ( op === 'two-of' ) {
+		return async function ( reviewers ) {
+			core.info( `${ indent }Union of these, if none are empty:` );
+			const teamsApprovals = await Promise.all( arg.map( f => f( reviewers, `${ indent }  ` ) ) );
+
+			core.info( `${ indent }Test teams ${JSON.stringify(teamsApprovals)}:` );
+
+			const teamsApprovalsCount = teamsApprovals.filter(approvals => approvals.length >= 1).length;
+
+			if (teamsApprovalsCount < 2) {
+				return printSet( `${ indent }=>`, [] );
+			}
+
+			return printSet( `${ indent }=>`, [ ...new Set( teams.flat( 1 ) ) ] );
+		};
+	}
+
 	throw new RequirementError( `Unrecognized operation "${ op }"`, {
 		config: config,
 		value: teamConfig,
