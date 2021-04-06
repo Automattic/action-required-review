@@ -114,7 +114,7 @@ function buildReviewerFilter( config, teamConfig, indent ) {
 				return printSet( `${ indent }=>`, [] );
 			}
 
-			return printSet( `${ indent }=>`, [ ...new Set( teams.flat( 1 ) ) ] );
+			return printSet( `${ indent }=>`, [ ...new Set( teamsApprovals.flat( 1 ) ) ] );
 		};
 	}
 
