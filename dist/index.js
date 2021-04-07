@@ -16329,6 +16329,46 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 9234:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const core = __nccwpck_require__( 2186 );
+const github = __nccwpck_require__( 5438 );
+const { WError } = __nccwpck_require__( 8345 );
+
+/**
+ * Fetch the labels of a PR.
+ *
+ * @returns {string[]} Labels.
+ */
+async function fetchLabels() {
+	const octokit = github.getOctokit( core.getInput( 'token', { required: true } ) );
+
+	const owner = github.context.payload.repository.owner.login;
+	const repo = github.context.payload.repository.name;
+	const prNumber = github.context.payload.pull_request.number;
+
+	try {
+        const { data } = await octokit.pulls.get({
+            pull_number: prNumber,
+            owner,
+            repo,
+          });
+          
+          return data.labels.map((label) => label.name);
+	} catch ( error ) {
+		throw new WError(
+			`Failed to query ${ owner }/${ repo } PR #${ pr } labels from GitHub`,
+			error,
+			{}
+		);
+	}
+}
+
+module.exports = fetchLabels;
+
+/***/ }),
+
 /***/ 2603:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -16549,10 +16589,8 @@ function buildReviewerFilter( config, teamConfig, indent ) {
 
 	if ( op === 'two-of' ) {
 		return async function ( reviewers ) {
-			core.info( `${ indent }Union of these, if none are empty:` );
+			core.info( `${ indent }Union of these, if two are not empty:` );
 			const teamsApprovals = await Promise.all( arg.map( f => f( reviewers, `${ indent }  ` ) ) );
-
-			core.info( `${ indent }Test teams ${JSON.stringify(teamsApprovals)}:` );
 
 			const teamsApprovalsCount = teamsApprovals.filter(approvals => approvals.length >= 1).length;
 
@@ -17037,11 +17075,29 @@ async function getRequirements() {
 	}
 }
 
+async function getLabelsToSkipCheck() {
+	let labelsString = core.getInput( 'skipOnLabels' );
+
+	try {
+		const labels = yaml.load(labelsString, {
+			onWarning: w => core.warning( `Yaml: ${ w.message }` ),
+		} );
+
+		return labels || [];
+	} catch ( error ) {
+		error[ Symbol.toStringTag ] = 'Error'; // Work around weird check in WError.
+		throw new reporter.ReportError( 'Labels are not valid', error, {} );
+	}
+}
+
 /**
  * Action entry point.
  */
 async function main() {
 	try {
+		const labelsToSkipCheck = await getLabelsToSkipCheck();
+		core.startGroup( `Loaded ${ labelsToSkipCheck.length } labels to skip check` );
+
 		const requirements = await getRequirements();
 		core.startGroup( `Loaded ${ requirements.length } review requirement(s)` );
 
@@ -17055,7 +17111,19 @@ async function main() {
 		paths.forEach( p => core.info( p ) );
 		core.endGroup();
 
-		let matchedPaths = [];
+		const labels = await __nccwpck_require__(9234)();
+		core.startGroup( `Found ${ labels.length } label(s)` );
+		labels.forEach( r => core.info( r ) );
+		core.endGroup();
+
+		const shouldSkipCheck = labelsToSkipCheck.some(label => labels.includes(label))
+
+		if (shouldSkipCheck) {
+			await reporter.status( reporter.STATE_SUCCESS, `Skipped as ${labelsToSkipCheck.join(',')} labels found` );
+			return;
+		}
+
+		const matchedPaths = [];
 		let ok = true;
 		for ( let i = 0; i < requirements.length; i++ ) {
 			const r = requirements[ i ];

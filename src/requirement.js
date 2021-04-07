@@ -103,10 +103,8 @@ function buildReviewerFilter( config, teamConfig, indent ) {
 
 	if ( op === 'two-of' ) {
 		return async function ( reviewers ) {
-			core.info( `${ indent }Union of these, if none are empty:` );
+			core.info( `${ indent }Union of these, if two are not empty:` );
 			const teamsApprovals = await Promise.all( arg.map( f => f( reviewers, `${ indent }  ` ) ) );
-
-			core.info( `${ indent }Test teams ${JSON.stringify(teamsApprovals)}:` );
 
 			const teamsApprovalsCount = teamsApprovals.filter(approvals => approvals.length >= 1).length;
 

@@ -50,11 +50,29 @@ async function getRequirements() {
 	}
 }
 
+async function getLabelsToSkipCheck() {
+	let labelsString = core.getInput( 'skipOnLabels' );
+
+	try {
+		const labels = yaml.load(labelsString, {
+			onWarning: w => core.warning( `Yaml: ${ w.message }` ),
+		} );
+
+		return labels || [];
+	} catch ( error ) {
+		error[ Symbol.toStringTag ] = 'Error'; // Work around weird check in WError.
+		throw new reporter.ReportError( 'Labels are not valid', error, {} );
+	}
+}
+
 /**
  * Action entry point.
  */
 async function main() {
 	try {
+		const labelsToSkipCheck = await getLabelsToSkipCheck();
+		core.startGroup( `Loaded ${ labelsToSkipCheck.length } labels to skip check` );
+
 		const requirements = await getRequirements();
 		core.startGroup( `Loaded ${ requirements.length } review requirement(s)` );
 
@@ -68,7 +86,19 @@ async function main() {
 		paths.forEach( p => core.info( p ) );
 		core.endGroup();
 
-		let matchedPaths = [];
+		const labels = await require('./labels')();
+		core.startGroup( `Found ${ labels.length } label(s)` );
+		labels.forEach( r => core.info( r ) );
+		core.endGroup();
+
+		const shouldSkipCheck = labelsToSkipCheck.some(label => labels.includes(label))
+
+		if (shouldSkipCheck) {
+			await reporter.status( reporter.STATE_SUCCESS, `Skipped as ${labelsToSkipCheck.join(',')} labels found` );
+			return;
+		}
+
+		const matchedPaths = [];
 		let ok = true;
 		for ( let i = 0; i < requirements.length; i++ ) {
 			const r = requirements[ i ];
