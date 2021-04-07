@@ -4,6 +4,11 @@ branding:
   icon: 'user-check'
   color: 'green'
 inputs:
+  skipOnLabels:
+    description: >
+      Allows to specify an array of labels to skip the check.
+      If some of these labels are set for a PR the check submits 'success' status.
+    required: false
   requirements:
     description: >
       Requirements, as a string containing YAML.
