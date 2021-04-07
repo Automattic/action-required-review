@@ -94,7 +94,7 @@ async function main() {
 		const shouldSkipCheck = labelsToSkipCheck.some(label => labels.includes(label))
 
 		if (shouldSkipCheck) {
-			await reporter.status( reporter.STATE_SUCCESS, `Skipped as ${labelsToSkipCheck.join(',')} labels found` );
+			await reporter.status( reporter.STATE_SUCCESS, `Skipped as '${labelsToSkipCheck.join(',')}' label(s) set` );
 			return;
 		}
 
