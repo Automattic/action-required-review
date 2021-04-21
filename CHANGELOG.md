@@ -14,6 +14,7 @@ This is an alpha version! The changes listed here are not final.
 - Created a changelog from the git history with help from [auto-changelog](https://www.npmjs.com/package/auto-changelog). It could probably use cleanup!
 
 ### Changed
+- Updated package dependencies
 - Update package dependencies.
 
 ## [2.0.0] - 2021-02-03
