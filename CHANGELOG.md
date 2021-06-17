@@ -20,6 +20,7 @@ This is an alpha version! The changes listed here are not final.
 - Updated package dependencies
 - Updated package dependencies
 - Updated package dependencies.
+- Updated `@actions/github` with attendent code adjustments.
 - Update package dependencies.
 
 ## [2.0.0] - 2021-02-03
