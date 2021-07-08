@@ -4033,7 +4033,7 @@ exports.Deprecation = Deprecation;
 "use strict";
 
 
-var iconvLite = __nccwpck_require__(2094);
+var iconvLite = __nccwpck_require__(5550);
 
 // Expose to the world
 module.exports.O = convert;
@@ -4631,7 +4631,7 @@ function stringTemplate (string, object) {
 
 /***/ }),
 
-/***/ 5830:
+/***/ 2759:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -5236,7 +5236,7 @@ function findIdx(table, val) {
 
 /***/ }),
 
-/***/ 4932:
+/***/ 2435:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -5282,7 +5282,7 @@ module.exports = {
 
     'shiftjis': {
         type: '_dbcs',
-        table: function() { return __nccwpck_require__(9341) },
+        table: function() { return __nccwpck_require__(6064) },
         encodeAdd: {'\u00a5': 0x5C, '\u203E': 0x7E},
         encodeSkipVals: [{from: 0xED40, to: 0xF940}],
     },
@@ -5299,7 +5299,7 @@ module.exports = {
 
     'eucjp': {
         type: '_dbcs',
-        table: function() { return __nccwpck_require__(8058) },
+        table: function() { return __nccwpck_require__(6494) },
         encodeAdd: {'\u00a5': 0x5C, '\u203E': 0x7E},
     },
 
@@ -5326,13 +5326,13 @@ module.exports = {
     '936': 'cp936',
     'cp936': {
         type: '_dbcs',
-        table: function() { return __nccwpck_require__(9992) },
+        table: function() { return __nccwpck_require__(9845) },
     },
 
     // GBK (~22000 chars) is an extension of CP936 that added user-mapped chars and some other.
     'gbk': {
         type: '_dbcs',
-        table: function() { return __nccwpck_require__(9992).concat(__nccwpck_require__(1615)) },
+        table: function() { return __nccwpck_require__(9845).concat(__nccwpck_require__(9021)) },
     },
     'xgbk': 'gbk',
     'isoir58': 'gbk',
@@ -5344,8 +5344,8 @@ module.exports = {
     // http://www.khngai.com/chinese/charmap/tblgbk.php?page=0
     'gb18030': {
         type: '_dbcs',
-        table: function() { return __nccwpck_require__(9992).concat(__nccwpck_require__(1615)) },
-        gb18030: function() { return __nccwpck_require__(1139) },
+        table: function() { return __nccwpck_require__(9845).concat(__nccwpck_require__(9021)) },
+        gb18030: function() { return __nccwpck_require__(4968) },
         encodeSkipVals: [0x80],
         encodeAdd: {'€': 0xA2E3},
     },
@@ -5360,7 +5360,7 @@ module.exports = {
     '949': 'cp949',
     'cp949': {
         type: '_dbcs',
-        table: function() { return __nccwpck_require__(343) },
+        table: function() { return __nccwpck_require__(644) },
     },
 
     'cseuckr': 'cp949',
@@ -5401,15 +5401,27 @@ module.exports = {
     '950': 'cp950',
     'cp950': {
         type: '_dbcs',
-        table: function() { return __nccwpck_require__(1857) },
+        table: function() { return __nccwpck_require__(2200) },
     },
 
     // Big5 has many variations and is an extension of cp950. We use Encoding Standard's as a consensus.
     'big5': 'big5hkscs',
     'big5hkscs': {
         type: '_dbcs',
-        table: function() { return __nccwpck_require__(1857).concat(__nccwpck_require__(5711)) },
-        encodeSkipVals: [0xa2cc],
+        table: function() { return __nccwpck_require__(2200).concat(__nccwpck_require__(6743)) },
+        encodeSkipVals: [
+            // Although Encoding Standard says we should avoid encoding to HKSCS area (See Step 1 of
+            // https://encoding.spec.whatwg.org/#index-big5-pointer), we still do it to increase compatibility with ICU.
+            // But if a single unicode point can be encoded both as HKSCS and regular Big5, we prefer the latter.
+            0x8e69, 0x8e6f, 0x8e7e, 0x8eab, 0x8eb4, 0x8ecd, 0x8ed0, 0x8f57, 0x8f69, 0x8f6e, 0x8fcb, 0x8ffe,
+            0x906d, 0x907a, 0x90c4, 0x90dc, 0x90f1, 0x91bf, 0x92af, 0x92b0, 0x92b1, 0x92b2, 0x92d1, 0x9447, 0x94ca,
+            0x95d9, 0x96fc, 0x9975, 0x9b76, 0x9b78, 0x9b7b, 0x9bc6, 0x9bde, 0x9bec, 0x9bf6, 0x9c42, 0x9c53, 0x9c62,
+            0x9c68, 0x9c6b, 0x9c77, 0x9cbc, 0x9cbd, 0x9cd0, 0x9d57, 0x9d5a, 0x9dc4, 0x9def, 0x9dfb, 0x9ea9, 0x9eef,
+            0x9efd, 0x9f60, 0x9fcb, 0xa077, 0xa0dc, 0xa0df, 0x8fcc, 0x92c8, 0x9644, 0x96ed,
+
+            // Step 2 of https://encoding.spec.whatwg.org/#index-big5-pointer: Use last pointer for U+2550, U+255E, U+2561, U+256A, U+5341, or U+5345
+            0xa2a4, 0xa2a5, 0xa2a7, 0xa2a6, 0xa2cc, 0xa2ce,
+        ],
     },
 
     'cnbig5': 'big5hkscs',
@@ -5420,7 +5432,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 8657:
+/***/ 6429:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -5429,15 +5441,15 @@ module.exports = {
 // Update this array if you add/rename/remove files in this directory.
 // We support Browserify by skipping automatic module discovery and requiring modules directly.
 var modules = [
-    __nccwpck_require__(9809),
-    __nccwpck_require__(7332),
-    __nccwpck_require__(2457),
-    __nccwpck_require__(7889),
-    __nccwpck_require__(3023),
-    __nccwpck_require__(1474),
-    __nccwpck_require__(8117),
-    __nccwpck_require__(5830),
-    __nccwpck_require__(4932),
+    __nccwpck_require__(7638),
+    __nccwpck_require__(7944),
+    __nccwpck_require__(931),
+    __nccwpck_require__(5143),
+    __nccwpck_require__(7048),
+    __nccwpck_require__(1339),
+    __nccwpck_require__(2786),
+    __nccwpck_require__(2759),
+    __nccwpck_require__(2435),
 ];
 
 // Put all encoding/alias/codec definitions to single object and export it.
@@ -5451,7 +5463,7 @@ for (var i = 0; i < modules.length; i++) {
 
 /***/ }),
 
-/***/ 9809:
+/***/ 7638:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -5657,7 +5669,7 @@ InternalDecoderCesu8.prototype.end = function() {
 
 /***/ }),
 
-/***/ 3023:
+/***/ 7048:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -5737,7 +5749,7 @@ SBCSDecoder.prototype.end = function() {
 
 /***/ }),
 
-/***/ 8117:
+/***/ 2786:
 /***/ ((module) => {
 
 "use strict";
@@ -6195,7 +6207,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1474:
+/***/ 1339:
 /***/ ((module) => {
 
 "use strict";
@@ -6382,7 +6394,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 2457:
+/***/ 931:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -6587,7 +6599,7 @@ function detectEncoding(bufs, defaultEncoding) {
 
 /***/ }),
 
-/***/ 7332:
+/***/ 7944:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -6914,7 +6926,7 @@ function detectEncoding(bufs, defaultEncoding) {
 
 /***/ }),
 
-/***/ 7889:
+/***/ 5143:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -7212,7 +7224,7 @@ Utf7IMAPDecoder.prototype.end = function() {
 
 /***/ }),
 
-/***/ 6606:
+/***/ 2461:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -7272,7 +7284,7 @@ StripBOMWrapper.prototype.end = function() {
 
 /***/ }),
 
-/***/ 2094:
+/***/ 5550:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -7280,7 +7292,7 @@ StripBOMWrapper.prototype.end = function() {
 
 var Buffer = __nccwpck_require__(2933).Buffer;
 
-var bomHandling = __nccwpck_require__(6606),
+var bomHandling = __nccwpck_require__(2461),
     iconv = module.exports;
 
 // All codecs and aliases are kept here, keyed by encoding name/alias.
@@ -7338,7 +7350,7 @@ iconv.fromEncoding = iconv.decode;
 iconv._codecDataCache = {};
 iconv.getCodec = function getCodec(encoding) {
     if (!iconv.encodings)
-        iconv.encodings = __nccwpck_require__(8657); // Lazy load all encoding definitions.
+        iconv.encodings = __nccwpck_require__(6429); // Lazy load all encoding definitions.
     
     // Canonicalize encoding name: strip all non-alphanumeric chars and appended year.
     var enc = iconv._canonicalizeEncoding(encoding);
@@ -7419,7 +7431,7 @@ iconv.enableStreamingAPI = function enableStreamingAPI(stream_module) {
         return;
 
     // Dependency-inject stream module to create IconvLite stream classes.
-    var streams = __nccwpck_require__(7612)(stream_module);
+    var streams = __nccwpck_require__(4040)(stream_module);
 
     // Not public API yet, but expose the stream classes.
     iconv.IconvLiteEncoderStream = streams.IconvLiteEncoderStream;
@@ -7458,7 +7470,7 @@ if (false) {}
 
 /***/ }),
 
-/***/ 7612:
+/***/ 4040:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -16355,7 +16367,7 @@ module.exports = fetchTeamMembers;
 
 /***/ }),
 
-/***/ 5711:
+/***/ 6743:
 /***/ ((module) => {
 
 "use strict";
@@ -16363,7 +16375,7 @@ module.exports = JSON.parse('[["8740","䏰䰲䘃䖦䕸𧉧䵷䖳𧲱䳢𧳅㮕�
 
 /***/ }),
 
-/***/ 9992:
+/***/ 9845:
 /***/ ((module) => {
 
 "use strict";
@@ -16371,7 +16383,7 @@ module.exports = JSON.parse('[["0","\\u0000",127,"€"],["8140","丂丄丅丆丏
 
 /***/ }),
 
-/***/ 343:
+/***/ 644:
 /***/ ((module) => {
 
 "use strict";
@@ -16379,7 +16391,7 @@ module.exports = JSON.parse('[["0","\\u0000",127],["8141","갂갃갅갆갋",4,"�
 
 /***/ }),
 
-/***/ 1857:
+/***/ 2200:
 /***/ ((module) => {
 
 "use strict";
@@ -16387,7 +16399,7 @@ module.exports = JSON.parse('[["0","\\u0000",127],["a140","　，、。．‧；
 
 /***/ }),
 
-/***/ 8058:
+/***/ 6494:
 /***/ ((module) => {
 
 "use strict";
@@ -16395,7 +16407,7 @@ module.exports = JSON.parse('[["0","\\u0000",127],["8ea1","｡",62],["a1a1","　
 
 /***/ }),
 
-/***/ 1139:
+/***/ 4968:
 /***/ ((module) => {
 
 "use strict";
@@ -16403,7 +16415,7 @@ module.exports = JSON.parse('{"uChars":[128,165,169,178,184,216,226,235,238,244,
 
 /***/ }),
 
-/***/ 1615:
+/***/ 9021:
 /***/ ((module) => {
 
 "use strict";
@@ -16411,7 +16423,7 @@ module.exports = JSON.parse('[["a140","",62],["a180","",32],["a240","",
 
 /***/ }),
 
-/***/ 9341:
+/***/ 6064:
 /***/ ((module) => {
 
 "use strict";
