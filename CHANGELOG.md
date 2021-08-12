@@ -5,25 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.1.0-alpha] - unreleased
-
-This is an alpha version! The changes listed here are not final.
-
+## [2.1.0] - 2021-08-12
 ### Added
 - Added autotagger action to simplify releases
 - Added support for naming individual users as required reviewers
-- Created a changelog from the git history with help from [auto-changelog](https://www.npmjs.com/package/auto-changelog). It could probably use cleanup!
+- Created a changelog from the git history with help from [auto-changelog](https://www.npmjs.com/package/auto-changelog).
 
 ### Changed
 - Updated package dependencies
-- Updated package dependencies
-- Updated package dependencies
-- Updated package dependencies
-- Updated package dependencies
-- Updated package dependencies.
 - Updated `@actions/github` with attendent code adjustments.
 - Update node version requirement to 14.16.1
-- Update package dependencies.
 
 ## [2.0.0] - 2021-02-03
 
@@ -33,5 +24,5 @@ This is an alpha version! The changes listed here are not final.
 
 - Initial release
 
-[2.1.0-alpha]: https://github.com/Automattic/action-required-review/compare/v2.0.0...v2.1.0-alpha
+[2.1.0]: https://github.com/Automattic/action-required-review/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/Automattic/action-required-review/compare/v1...v2.0.0
