@@ -1375,7 +1375,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 var universalUserAgent = __nccwpck_require__(7268);
 var beforeAfterHook = __nccwpck_require__(2601);
-var request = __nccwpck_require__(5314);
+var request = __nccwpck_require__(2993);
 var graphql = __nccwpck_require__(6267);
 var authToken = __nccwpck_require__(9641);
 
@@ -1955,7 +1955,7 @@ exports.endpoint = endpoint;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 
-var request = __nccwpck_require__(5314);
+var request = __nccwpck_require__(2993);
 var universalUserAgent = __nccwpck_require__(7268);
 
 const VERSION = "4.8.0";
@@ -3413,7 +3413,7 @@ exports.RequestError = RequestError;
 
 /***/ }),
 
-/***/ 5314:
+/***/ 2993:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -3429,7 +3429,7 @@ var isPlainObject = __nccwpck_require__(5696);
 var nodeFetch = _interopDefault(__nccwpck_require__(5660));
 var requestError = __nccwpck_require__(4724);
 
-const VERSION = "5.6.2";
+const VERSION = "5.6.3";
 
 function getBufferResponse(response) {
   return response.arrayBuffer();
