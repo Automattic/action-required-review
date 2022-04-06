@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 This is an alpha version! The changes listed here are not final.
 
 ### Changed
+- Updated package dependencies
 - Use the node16 runner instead of the deprecated node12 runner.
 
 ## [2.2.2] - 2022-02-09
