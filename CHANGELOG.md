@@ -14,6 +14,9 @@ This is an alpha version! The changes listed here are not final.
 - Updated package dependencies
 - Use the node16 runner instead of the deprecated node12 runner.
 
+### Fixed
+- Fix handling of re-reviews, only look at the latest review per user.
+
 ## [2.2.2] - 2022-02-09
 ### Changed
 - Core: update description and metadata before to publish to marketplace.
