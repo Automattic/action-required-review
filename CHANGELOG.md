@@ -11,7 +11,6 @@ This is an alpha version! The changes listed here are not final.
 
 ### Changed
 - The `token` parameter was effectively required, as the default `GITHUB_TOKEN` lacks the ability to read team membership. The parameter is now explicitly required.
-- Updated package dependencies
 - Updated package dependencies.
 - Use the node16 runner instead of the deprecated node12 runner.
 
