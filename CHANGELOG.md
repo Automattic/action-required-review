@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This is an alpha version! The changes listed here are not final.
 
+### Added
+- Add optional input which fails review required status checks instead of leaving them pending.
+
 ## [3.0.0] - 2022-07-06
 ### Changed
 - Reorder JS imports for `import/order` eslint rule. [#24601]
