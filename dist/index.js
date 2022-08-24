@@ -1162,9 +1162,9 @@ exports.getOctokitOptions = exports.GitHub = exports.context = void 0;
 const Context = __importStar(__nccwpck_require__(7061));
 const Utils = __importStar(__nccwpck_require__(6416));
 // octokit + plugins
-const core_1 = __nccwpck_require__(1655);
-const plugin_rest_endpoint_methods_1 = __nccwpck_require__(9184);
-const plugin_paginate_rest_1 = __nccwpck_require__(3998);
+const core_1 = __nccwpck_require__(9170);
+const plugin_rest_endpoint_methods_1 = __nccwpck_require__(8248);
+const plugin_paginate_rest_1 = __nccwpck_require__(9752);
 exports.context = new Context.Context();
 const baseUrl = Utils.getApiBaseUrl();
 const defaults = {
@@ -1962,7 +1962,7 @@ exports.checkBypass = checkBypass;
 
 /***/ }),
 
-/***/ 2801:
+/***/ 9641:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -2025,7 +2025,7 @@ exports.createTokenAuth = createTokenAuth;
 
 /***/ }),
 
-/***/ 1655:
+/***/ 9170:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2035,12 +2035,49 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 var universalUserAgent = __nccwpck_require__(7268);
 var beforeAfterHook = __nccwpck_require__(2601);
-var request = __nccwpck_require__(1588);
-var graphql = __nccwpck_require__(1047);
-var authToken = __nccwpck_require__(2801);
+var request = __nccwpck_require__(2993);
+var graphql = __nccwpck_require__(6267);
+var authToken = __nccwpck_require__(9641);
 
-const VERSION = "4.0.4";
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
 
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+
+  var target = _objectWithoutPropertiesLoose(source, excluded);
+
+  var key, i;
+
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+
+  return target;
+}
+
+const VERSION = "3.6.0";
+
+const _excluded = ["authStrategy"];
 class Octokit {
   constructor(options = {}) {
     const hook = new beforeAfterHook.Collection();
@@ -2100,9 +2137,10 @@ class Octokit {
       }
     } else {
       const {
-        authStrategy,
-        ...otherOptions
-      } = options;
+        authStrategy
+      } = options,
+            otherOptions = _objectWithoutProperties(options, _excluded);
+
       const auth = authStrategy(Object.assign({
         request: this.request,
         log: this.log,
@@ -2171,7 +2209,7 @@ exports.Octokit = Octokit;
 
 /***/ }),
 
-/***/ 8857:
+/***/ 3947:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2543,7 +2581,7 @@ function withDefaults(oldDefaults, newDefaults) {
   });
 }
 
-const VERSION = "7.0.0";
+const VERSION = "6.0.12";
 
 const userAgent = `octokit-endpoint.js/${VERSION} ${universalUserAgent.getUserAgent()}`; // DEFAULTS has all properties set that EndpointOptions has, except url.
 // So we use RequestParameters and add method as additional required property.
@@ -2569,7 +2607,7 @@ exports.endpoint = endpoint;
 
 /***/ }),
 
-/***/ 1047:
+/***/ 6267:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2577,10 +2615,10 @@ exports.endpoint = endpoint;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 
-var request = __nccwpck_require__(1588);
+var request = __nccwpck_require__(2993);
 var universalUserAgent = __nccwpck_require__(7268);
 
-const VERSION = "5.0.0";
+const VERSION = "4.8.0";
 
 function _buildMessageForResponseErrors(data) {
   return `Request failed due to following response errors:\n` + data.errors.map(e => ` - ${e.message}`).join("\n");
@@ -2695,7 +2733,7 @@ exports.withCustomRequest = withCustomRequest;
 
 /***/ }),
 
-/***/ 3998:
+/***/ 9752:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -2703,7 +2741,48 @@ exports.withCustomRequest = withCustomRequest;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 
-const VERSION = "3.0.0";
+const VERSION = "2.21.3";
+
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    enumerableOnly && (symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    })), keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = null != arguments[i] ? arguments[i] : {};
+    i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
+      _defineProperty(target, key, source[key]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
+      Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+    });
+  }
+
+  return target;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
 
 /**
  * Some “list” response that can be paginated have a different response structure
@@ -2724,9 +2803,9 @@ const VERSION = "3.0.0";
 function normalizePaginatedListResponse(response) {
   // endpoints can respond with 204 if repository is empty
   if (!response.data) {
-    return { ...response,
+    return _objectSpread2(_objectSpread2({}, response), {}, {
       data: []
-    };
+    });
   }
 
   const responseNeedsNormalization = "total_count" in response.data && !("url" in response.data);
@@ -2867,7 +2946,7 @@ exports.paginatingEndpoints = paginatingEndpoints;
 
 /***/ }),
 
-/***/ 9184:
+/***/ 8248:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3982,7 +4061,7 @@ exports.restEndpointMethods = restEndpointMethods;
 
 /***/ }),
 
-/***/ 8409:
+/***/ 4724:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -4064,7 +4143,7 @@ exports.RequestError = RequestError;
 
 /***/ }),
 
-/***/ 1588:
+/***/ 2993:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -4074,13 +4153,13 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var endpoint = __nccwpck_require__(8857);
+var endpoint = __nccwpck_require__(3947);
 var universalUserAgent = __nccwpck_require__(7268);
 var isPlainObject = __nccwpck_require__(5696);
 var nodeFetch = _interopDefault(__nccwpck_require__(5660));
-var requestError = __nccwpck_require__(8409);
+var requestError = __nccwpck_require__(4724);
 
-const VERSION = "6.1.0";
+const VERSION = "5.6.3";
 
 function getBufferResponse(response) {
   return response.arrayBuffer();
@@ -4096,9 +4175,7 @@ function fetchWrapper(requestOptions) {
   let headers = {};
   let status;
   let url;
-  const fetch = requestOptions.request && requestOptions.request.fetch || globalThis.fetch ||
-  /* istanbul ignore next */
-  nodeFetch;
+  const fetch = requestOptions.request && requestOptions.request.fetch || nodeFetch;
   return fetch(requestOptions.url, Object.assign({
     method: requestOptions.method,
     body: requestOptions.body,
