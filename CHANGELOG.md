@@ -16,6 +16,9 @@ This is an alpha version! The changes listed here are not final.
 ### Changed
 - Updated package dependencies.
 
+### Fixed
+- Ignore reviews with state "COMMENTED" when determining whether a reviewer has approved or not
+
 ## [3.0.0] - 2022-07-06
 ### Changed
 - Reorder JS imports for `import/order` eslint rule. [#24601]
