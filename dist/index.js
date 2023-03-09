@@ -16458,6 +16458,7 @@ class Requirement {
 	 * @param {object} config - Object config
 	 * @param {string[]|string} config.paths - Paths this requirement applies to. Either an array of picomatch globs, or the string "unmatched".
 	 * @param {Array} config.teams - Team reviews requirements.
+	 * @param {boolean} config.consume - Whether matched paths should be ignored by later rules.
 	 */
 	constructor( config ) {
 		this.name = config.name || 'Unnamed requirement';
@@ -16504,14 +16505,19 @@ class Requirement {
 		}
 
 		this.reviewerFilter = buildReviewerFilter( config, { 'any-of': config.teams }, '  ' );
+		this.consume = !! config.consume;
 	}
 
+	// eslint-disable-next-line jsdoc/require-returns, jsdoc/require-returns-check -- Doesn't support documentation of object structure.
 	/**
 	 * Test whether this requirement applies to the passed paths.
 	 *
 	 * @param {string[]} paths - Paths to test against.
-	 * @param {string[]} matchedPaths - Paths that have already been matched. Will be modified if true is returned.
-	 * @returns {boolean} Whether the requirement applies.
+	 * @param {string[]} matchedPaths - Paths that have already been matched.
+	 * @returns {object} _ Results object.
+	 * @returns {boolean} _.applies Whether the requirement applies.
+	 * @returns {string[]} _.matchedPaths New value for `matchedPaths`.
+	 * @returns {string[]} _.paths New value for `paths`.
 	 */
 	appliesToPaths( paths, matchedPaths ) {
 		let matches;
@@ -16524,14 +16530,24 @@ class Requirement {
 			}
 		}
 
-		if ( matches.length !== 0 ) {
+		const ret = {
+			applies: matches.length !== 0,
+			matchedPaths,
+			paths,
+		};
+
+		if ( ret.applies ) {
 			core.info( 'Matches the following files:' );
 			matches.forEach( m => core.info( `   - ${ m }` ) );
-			matchedPaths.push( ...matches.filter( p => ! matchedPaths.includes( p ) ) );
-			matchedPaths.sort();
+			ret.matchedPaths = [ ...new Set( [ ...matchedPaths, ...matches ] ) ].sort();
+
+			if ( this.consume ) {
+				core.info( 'Consuming matched files!' );
+				ret.paths = ret.paths.filter( p => ! matches.includes( p ) );
+			}
 		}
 
-		return matches.length !== 0;
+		return ret;
 	}
 
 	/**
@@ -16896,17 +16912,19 @@ async function main() {
 		reviewers.forEach( r => core.info( r ) );
 		core.endGroup();
 
-		const paths = await __nccwpck_require__( 5770 )();
+		let paths = await __nccwpck_require__( 5770 )();
 		core.startGroup( `PR affects ${ paths.length } file(s)` );
 		paths.forEach( p => core.info( p ) );
 		core.endGroup();
 
-		const matchedPaths = [];
+		let matchedPaths = [];
 		let ok = true;
 		for ( let i = 0; i < requirements.length; i++ ) {
 			const r = requirements[ i ];
 			core.startGroup( `Checking requirement "${ r.name }"...` );
-			if ( ! r.appliesToPaths( paths, matchedPaths ) ) {
+			let applies;
+			( { applies, matchedPaths, paths } = r.appliesToPaths( paths, matchedPaths ) );
+			if ( ! applies ) {
 				core.endGroup();
 				core.info( `Requirement "${ r.name }" does not apply to any files in this PR.` );
 			} else if ( await r.isSatisfied( reviewers ) ) {
