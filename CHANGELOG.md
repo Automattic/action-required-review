@@ -12,6 +12,9 @@ This is an alpha version! The changes listed here are not final.
 ### Added
 - Added `consume` option for requirements.
 
+### Fixed
+- Don't fail on case mismatch for `@singleuser` pseudo-teams.
+
 ## [3.0.2] - 2023-02-07
 ### Changed
 - Minor internal updates.
