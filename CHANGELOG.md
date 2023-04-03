@@ -12,6 +12,9 @@ This is an alpha version! The changes listed here are not final.
 ### Added
 - Added `consume` option for requirements.
 
+### Changed
+- Updated package dependencies.
+
 ### Fixed
 - Don't fail on case mismatch for `@singleuser` pseudo-teams.
 
