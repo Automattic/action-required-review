@@ -11,6 +11,7 @@ This is an alpha version! The changes listed here are not final.
 
 ### Added
 - Added `consume` option for requirements.
+- Option to request review if requirement is not satisfied.
 
 ### Changed
 - Updated package dependencies.

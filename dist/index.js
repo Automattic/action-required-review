@@ -16351,6 +16351,53 @@ module.exports["default"] = module.exports;
 
 /***/ }),
 
+/***/ 9419:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const core = __nccwpck_require__( 4139 );
+const github = __nccwpck_require__( 248 );
+
+/**
+ * Request review from the given team
+ *
+ * @param {string[]} teams - GitHub team slug, or @ followed by a GitHub user name.
+ */
+async function requestReviewer( teams ) {
+	const octokit = github.getOctokit( core.getInput( 'token', { required: true } ) );
+	const owner = github.context.payload.repository.owner.login;
+	const repo = github.context.payload.repository.name;
+	const pr = github.context.payload.pull_request.number;
+
+	const userReviews = [];
+	const teamReviews = [];
+
+	for ( const t of teams ) {
+		if ( t.startsWith( '@' ) ) {
+			userReviews.push( t.slice( 1 ) );
+		} else {
+			teamReviews.push( t );
+		}
+	}
+
+	try {
+		await octokit.rest.pulls.requestReviewers( {
+			owner: owner,
+			repo: repo,
+			pull_number: pr,
+			reviewers: userReviews,
+			team_reviewers: teamReviews,
+		} );
+		core.info( `Requested review(s) from ${ teams }` );
+	} catch ( err ) {
+		throw new Error( `Unable to request review.\n  Error: ${ err }` );
+	}
+}
+
+module.exports = requestReviewer;
+
+
+/***/ }),
+
 /***/ 2594:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -16366,12 +16413,13 @@ class RequirementError extends SError {}
  * Prints a result set, then returns it.
  *
  * @param {string} label - Label for the set.
- * @param {string[]} items - Items to print. If an empty array, will print `<empty set>` instead.
- * @returns {string[]} `items`.
+ * @param {string[]} teamReviewers - Team members that have reviewed the file. If an empty array, will print `<empty set>` instead.
+ * @param {string[]} neededTeams - Teams that have no reviews from it's members.
+ * @returns {{teamReviewers, neededTeams}} `{teamReviewers, neededTeams}`.
  */
-function printSet( label, items ) {
-	core.info( label + ' ' + ( items.length ? items.join( ', ' ) : '<empty set>' ) );
-	return items;
+function printSet( label, teamReviewers, neededTeams ) {
+	core.info( label + ' ' + ( teamReviewers.length ? teamReviewers.join( ', ' ) : '<empty set>' ) );
+	return { teamReviewers, neededTeams };
 }
 
 /**
@@ -16387,10 +16435,9 @@ function buildReviewerFilter( config, teamConfig, indent ) {
 		const team = teamConfig;
 		return async function ( reviewers ) {
 			const members = await fetchTeamMembers( team );
-			return printSet(
-				`${ indent }Members of ${ team }:`,
-				reviewers.filter( reviewer => members.includes( reviewer ) )
-			);
+			const teamReviewers = reviewers.filter( reviewer => members.includes( reviewer ) );
+			const neededTeams = teamReviewers.length ? [] : [ team ];
+			return printSet( `${ indent }Members of ${ team }:`, teamReviewers, neededTeams );
 		};
 	}
 
@@ -16437,22 +16484,48 @@ function buildReviewerFilter( config, teamConfig, indent ) {
 	if ( op === 'any-of' ) {
 		return async function ( reviewers ) {
 			core.info( `${ indent }Union of these:` );
-			return printSet( `${ indent }=>`, [
-				...new Set(
-					( await Promise.all( arg.map( f => f( reviewers, `${ indent }  ` ) ) ) ).flat( 1 )
-				),
-			] );
+			const reviewersAny = await Promise.all( arg.map( f => f( reviewers, `${ indent }  ` ) ) );
+			const requirementsMet = [];
+			const neededTeams = [];
+			for ( const requirementResult of reviewersAny ) {
+				if ( requirementResult.teamReviewers.length !== 0 ) {
+					requirementsMet.push( requirementResult.teamReviewers );
+				}
+				if ( requirementResult.neededTeams.length !== 0 ) {
+					neededTeams.push( requirementResult.neededTeams );
+				}
+			}
+			if ( requirementsMet.length > 0 ) {
+				// If there are requirements met, zero out the needed teams
+				neededTeams.length = 0;
+			}
+			return printSet(
+				`${ indent }=>`,
+				[ ...new Set( requirementsMet.flat( 1 ) ) ],
+				[ ...new Set( neededTeams.flat( 1 ) ) ]
+			);
 		};
 	}
 
 	if ( op === 'all-of' ) {
 		return async function ( reviewers ) {
 			core.info( `${ indent }Union of these, if none are empty:` );
-			const filtered = await Promise.all( arg.map( f => f( reviewers, `${ indent }  ` ) ) );
-			if ( filtered.some( a => a.length === 0 ) ) {
-				return printSet( `${ indent }=>`, [] );
+			const reviewersAll = await Promise.all( arg.map( f => f( reviewers, `${ indent }  ` ) ) );
+			const requirementsMet = [];
+			const neededTeams = [];
+			for ( const requirementResult of reviewersAll ) {
+				if ( requirementResult.teamReviewers.length !== 0 ) {
+					requirementsMet.push( requirementResult.teamReviewers );
+				}
+				if ( requirementResult.neededTeams.length !== 0 ) {
+					neededTeams.push( requirementResult.neededTeams );
+				}
 			}
-			return printSet( `${ indent }=>`, [ ...new Set( filtered.flat( 1 ) ) ] );
+			if ( neededTeams.length !== 0 ) {
+				// If there are needed teams, zero out requirements met
+				return printSet( `${ indent }=>`, [], [ ...new Set( neededTeams.flat( 1 ) ) ] );
+			}
+			return printSet( `${ indent }=>`, [ ...new Set( requirementsMet.flat( 1 ) ) ], [] );
 		};
 	}
 
@@ -16571,9 +16644,10 @@ class Requirement {
 	 * @param {string[]} reviewers - Reviewers to test against.
 	 * @returns {boolean} Whether the requirement is satisfied.
 	 */
-	async isSatisfied( reviewers ) {
+	async needsReviewsFrom( reviewers ) {
 		core.info( 'Checking reviewers...' );
-		return ( await this.reviewerFilter( reviewers ) ).length > 0;
+		const checkNeededTeams = await this.reviewerFilter( reviewers );
+		return checkNeededTeams.neededTeams;
 	}
 }
 
@@ -16882,6 +16956,7 @@ const fs = __nccwpck_require__( 7147 );
 const core = __nccwpck_require__( 4139 );
 const yaml = __nccwpck_require__( 9520 );
 const reporter = __nccwpck_require__( 6110 );
+const requestReview = __nccwpck_require__( 9419 );
 const Requirement = __nccwpck_require__( 2594 );
 
 /**
@@ -16890,9 +16965,9 @@ const Requirement = __nccwpck_require__( 2594 );
  * @returns {Requirement[]} Requirements.
  */
 async function getRequirements() {
-	let reqirementsString = core.getInput( 'requirements' );
+	let requirementsString = core.getInput( 'requirements' );
 
-	if ( ! reqirementsString ) {
+	if ( ! requirementsString ) {
 		const filename = core.getInput( 'requirements-file' );
 		if ( ! filename ) {
 			throw new reporter.ReportError(
@@ -16903,7 +16978,7 @@ async function getRequirements() {
 		}
 
 		try {
-			reqirementsString = fs.readFileSync( filename, 'utf8' );
+			requirementsString = fs.readFileSync( filename, 'utf8' );
 		} catch ( error ) {
 			throw new reporter.ReportError(
 				`Requirements file ${ filename } could not be read`,
@@ -16916,7 +16991,7 @@ async function getRequirements() {
 	}
 
 	try {
-		const requirements = yaml.load( reqirementsString, {
+		const requirements = yaml.load( requirementsString, {
 			onWarning: w => core.warning( `Yaml: ${ w.message }` ),
 		} );
 		if ( ! Array.isArray( requirements ) ) {
@@ -16949,7 +17024,7 @@ async function main() {
 		core.endGroup();
 
 		let matchedPaths = [];
-		let ok = true;
+		const teamsNeededForReview = new Set();
 		for ( let i = 0; i < requirements.length; i++ ) {
 			const r = requirements[ i ];
 			core.startGroup( `Checking requirement "${ r.name }"...` );
@@ -16958,22 +17033,27 @@ async function main() {
 			if ( ! applies ) {
 				core.endGroup();
 				core.info( `Requirement "${ r.name }" does not apply to any files in this PR.` );
-			} else if ( await r.isSatisfied( reviewers ) ) {
-				core.endGroup();
-				core.info( `Requirement "${ r.name }" is satisfied by the existing reviews.` );
 			} else {
-				ok = false;
+				const neededForRequirement = await r.needsReviewsFrom( reviewers );
 				core.endGroup();
-				core.error( `Requirement "${ r.name }" is not satisfied by the existing reviews.` );
+				if ( neededForRequirement.length === 0 ) {
+					core.info( `Requirement "${ r.name }" is satisfied by the existing reviews.` );
+				} else {
+					core.error( `Requirement "${ r.name }" is not satisfied by the existing reviews.` );
+					neededForRequirement.forEach( teamsNeededForReview.add, teamsNeededForReview );
+				}
 			}
 		}
-		if ( ok ) {
+		if ( teamsNeededForReview.size === 0 ) {
 			await reporter.status( reporter.STATE_SUCCESS, 'All required reviews have been provided!' );
 		} else {
 			await reporter.status(
 				core.getBooleanInput( 'fail' ) ? reporter.STATE_FAILURE : reporter.STATE_PENDING,
 				reviewers.length ? 'Awaiting more reviews...' : 'Awaiting reviews...'
 			);
+			if ( core.getBooleanInput( 'request-reviews' ) ) {
+				await requestReview( [ ...teamsNeededForReview ] );
+			}
 		}
 	} catch ( error ) {
 		let err, state, description;
