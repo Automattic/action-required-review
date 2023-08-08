@@ -524,8 +524,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OidcClient = void 0;
-const http_client_1 = __nccwpck_require__(940);
-const auth_1 = __nccwpck_require__(3050);
+const http_client_1 = __nccwpck_require__(3500);
+const auth_1 = __nccwpck_require__(7697);
 const core_1 = __nccwpck_require__(4139);
 class OidcClient {
     static createHttpClient(allowRetry = true, maxRetry = 10) {
@@ -1125,7 +1125,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getApiBaseUrl = exports.getProxyAgent = exports.getAuthString = void 0;
-const httpClient = __importStar(__nccwpck_require__(940));
+const httpClient = __importStar(__nccwpck_require__(3500));
 function getAuthString(token, options) {
     if (!token && !options.auth) {
         throw new Error('Parameter token or opts.auth is required');
@@ -1210,7 +1210,7 @@ exports.getOctokitOptions = getOctokitOptions;
 
 /***/ }),
 
-/***/ 3050:
+/***/ 7697:
 /***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
@@ -1298,7 +1298,7 @@ exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHand
 
 /***/ }),
 
-/***/ 940:
+/***/ 3500:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -1336,7 +1336,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HttpClient = exports.isHttps = exports.HttpClientResponse = exports.HttpClientError = exports.getProxyUrl = exports.MediaTypes = exports.Headers = exports.HttpCodes = void 0;
 const http = __importStar(__nccwpck_require__(3685));
 const https = __importStar(__nccwpck_require__(5687));
-const pm = __importStar(__nccwpck_require__(4152));
+const pm = __importStar(__nccwpck_require__(8399));
 const tunnel = __importStar(__nccwpck_require__(5112));
 var HttpCodes;
 (function (HttpCodes) {
@@ -1423,6 +1423,19 @@ class HttpClientResponse {
                 });
                 this.message.on('end', () => {
                     resolve(output.toString());
+                });
+            }));
+        });
+    }
+    readBodyBuffer() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+                const chunks = [];
+                this.message.on('data', (chunk) => {
+                    chunks.push(chunk);
+                });
+                this.message.on('end', () => {
+                    resolve(Buffer.concat(chunks));
                 });
             }));
         });
@@ -1910,7 +1923,7 @@ const lowercaseKeys = (obj) => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCa
 
 /***/ }),
 
-/***/ 4152:
+/***/ 8399:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -1931,7 +1944,13 @@ function getProxyUrl(reqUrl) {
         }
     })();
     if (proxyVar) {
-        return new URL(proxyVar);
+        try {
+            return new URL(proxyVar);
+        }
+        catch (_a) {
+            if (!proxyVar.startsWith('http://') && !proxyVar.startsWith('https://'))
+                return new URL(`http://${proxyVar}`);
+        }
     }
     else {
         return undefined;
