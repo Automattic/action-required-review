@@ -17,12 +17,13 @@ async function status( state, description ) {
 	const octokit = github.getOctokit( core.getInput( 'token', { required: true } ) );
 	const owner = github.context.payload.repository.owner.login;
 	const repo = github.context.payload.repository.name;
+	const server_url = github.context.payload.server_url;
 	const req = {
 		owner: owner,
 		repo: repo,
 		sha: github.context.payload.pull_request.head.sha,
 		state: state,
-		target_url: `https://github.com/${ owner }/${ repo }/actions/runs/${ github.context.runId }`,
+		target_url: `${ server_url }/${ owner }/${ repo }/actions/runs/${ github.context.runId }`,
 		description: description,
 		context: core.getInput( 'status', { required: true } ),
 	};
