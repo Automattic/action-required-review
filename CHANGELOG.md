@@ -12,6 +12,9 @@ This is an alpha version! The changes listed here are not final.
 ### Added
 - Added support for GitHub Enterprise by replacing github.com with a dynamic variable
 
+### Changed
+- Updated package dependencies.
+
 ## [3.1.0] - 2023-07-06
 ### Added
 - Added `consume` option for requirements. [#29317]
