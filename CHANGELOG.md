@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.2.0-alpha] - unreleased
+## [4.0.0-alpha] - unreleased
 
 This is an alpha version! The changes listed here are not final.
 
@@ -14,6 +14,7 @@ This is an alpha version! The changes listed here are not final.
 
 ### Changed
 - Updated package dependencies.
+- Use the node20 runner instead of the deprecated node16 runner.
 
 ## [3.1.0] - 2023-07-06
 ### Added
@@ -85,7 +86,7 @@ This is an alpha version! The changes listed here are not final.
 
 - Initial release
 
-[3.2.0-alpha]: https://github.com/Automattic/action-required-review/compare/v3.1.0...v3.2.0-alpha
+[4.0.0-alpha]: https://github.com/Automattic/action-required-review/compare/v3.1.0...v4.0.0-alpha
 [3.1.0]: https://github.com/Automattic/action-required-review/compare/v3.0.2...v3.1.0
 [3.0.2]: https://github.com/Automattic/action-required-review/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/Automattic/action-required-review/compare/v3.0.0...v3.0.1
