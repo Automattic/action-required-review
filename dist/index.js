@@ -1214,9 +1214,9 @@ exports.getOctokitOptions = exports.GitHub = exports.defaults = exports.context 
 const Context = __importStar(__nccwpck_require__(7798));
 const Utils = __importStar(__nccwpck_require__(916));
 // octokit + plugins
-const core_1 = __nccwpck_require__(4336);
-const plugin_rest_endpoint_methods_1 = __nccwpck_require__(5442);
-const plugin_paginate_rest_1 = __nccwpck_require__(846);
+const core_1 = __nccwpck_require__(8426);
+const plugin_rest_endpoint_methods_1 = __nccwpck_require__(2418);
+const plugin_paginate_rest_1 = __nccwpck_require__(8729);
 exports.context = new Context.Context();
 const baseUrl = Utils.getApiBaseUrl();
 exports.defaults = {
@@ -2168,7 +2168,7 @@ var createTokenAuth = function createTokenAuth2(token) {
 
 /***/ }),
 
-/***/ 4336:
+/***/ 8426:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2199,12 +2199,12 @@ __export(dist_src_exports, {
 module.exports = __toCommonJS(dist_src_exports);
 var import_universal_user_agent = __nccwpck_require__(7125);
 var import_before_after_hook = __nccwpck_require__(6223);
-var import_request = __nccwpck_require__(7858);
-var import_graphql = __nccwpck_require__(1444);
+var import_request = __nccwpck_require__(9236);
+var import_graphql = __nccwpck_require__(4135);
 var import_auth_token = __nccwpck_require__(8953);
 
 // pkg/dist-src/version.js
-var VERSION = "5.1.0";
+var VERSION = "5.2.0";
 
 // pkg/dist-src/index.js
 var noop = () => {
@@ -2337,7 +2337,7 @@ var Octokit = class {
 
 /***/ }),
 
-/***/ 1940:
+/***/ 8577:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2371,7 +2371,7 @@ module.exports = __toCommonJS(dist_src_exports);
 var import_universal_user_agent = __nccwpck_require__(7125);
 
 // pkg/dist-src/version.js
-var VERSION = "9.0.4";
+var VERSION = "9.0.5";
 
 // pkg/dist-src/defaults.js
 var userAgent = `octokit-endpoint.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`;
@@ -2721,7 +2721,7 @@ var endpoint = withDefaults(null, DEFAULTS);
 
 /***/ }),
 
-/***/ 1444:
+/***/ 4135:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -2752,17 +2752,17 @@ __export(dist_src_exports, {
   withCustomRequest: () => withCustomRequest
 });
 module.exports = __toCommonJS(dist_src_exports);
-var import_request3 = __nccwpck_require__(7858);
+var import_request3 = __nccwpck_require__(9236);
 var import_universal_user_agent = __nccwpck_require__(7125);
 
 // pkg/dist-src/version.js
-var VERSION = "7.0.2";
+var VERSION = "7.1.0";
 
 // pkg/dist-src/with-defaults.js
-var import_request2 = __nccwpck_require__(7858);
+var import_request2 = __nccwpck_require__(9236);
 
 // pkg/dist-src/graphql.js
-var import_request = __nccwpck_require__(7858);
+var import_request = __nccwpck_require__(9236);
 
 // pkg/dist-src/error.js
 function _buildMessageForResponseErrors(data) {
@@ -2879,7 +2879,7 @@ function withCustomRequest(customRequest) {
 
 /***/ }),
 
-/***/ 846:
+/***/ 8729:
 /***/ ((module) => {
 
 "use strict";
@@ -3280,7 +3280,7 @@ paginateRest.VERSION = VERSION;
 
 /***/ }),
 
-/***/ 5442:
+/***/ 2418:
 /***/ ((module) => {
 
 "use strict";
@@ -5450,7 +5450,7 @@ legacyRestEndpointMethods.VERSION = VERSION;
 
 /***/ }),
 
-/***/ 1678:
+/***/ 3915:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -5548,7 +5548,7 @@ var RequestError = class extends Error {
 
 /***/ }),
 
-/***/ 7858:
+/***/ 9236:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -5577,11 +5577,11 @@ __export(dist_src_exports, {
   request: () => request
 });
 module.exports = __toCommonJS(dist_src_exports);
-var import_endpoint = __nccwpck_require__(1940);
+var import_endpoint = __nccwpck_require__(8577);
 var import_universal_user_agent = __nccwpck_require__(7125);
 
 // pkg/dist-src/version.js
-var VERSION = "8.2.0";
+var VERSION = "8.3.1";
 
 // pkg/dist-src/is-plain-object.js
 function isPlainObject(value) {
@@ -5597,7 +5597,7 @@ function isPlainObject(value) {
 }
 
 // pkg/dist-src/fetch-wrapper.js
-var import_request_error = __nccwpck_require__(1678);
+var import_request_error = __nccwpck_require__(3915);
 
 // pkg/dist-src/get-buffer-response.js
 function getBufferResponse(response) {
