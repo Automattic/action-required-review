@@ -2199,7 +2199,7 @@ __export(dist_src_exports, {
 module.exports = __toCommonJS(dist_src_exports);
 var import_universal_user_agent = __nccwpck_require__(7125);
 var import_before_after_hook = __nccwpck_require__(6223);
-var import_request = __nccwpck_require__(9236);
+var import_request = __nccwpck_require__(5418);
 var import_graphql = __nccwpck_require__(4135);
 var import_auth_token = __nccwpck_require__(8953);
 
@@ -2752,17 +2752,17 @@ __export(dist_src_exports, {
   withCustomRequest: () => withCustomRequest
 });
 module.exports = __toCommonJS(dist_src_exports);
-var import_request3 = __nccwpck_require__(9236);
+var import_request3 = __nccwpck_require__(5418);
 var import_universal_user_agent = __nccwpck_require__(7125);
 
 // pkg/dist-src/version.js
 var VERSION = "7.1.0";
 
 // pkg/dist-src/with-defaults.js
-var import_request2 = __nccwpck_require__(9236);
+var import_request2 = __nccwpck_require__(5418);
 
 // pkg/dist-src/graphql.js
-var import_request = __nccwpck_require__(9236);
+var import_request = __nccwpck_require__(5418);
 
 // pkg/dist-src/error.js
 function _buildMessageForResponseErrors(data) {
@@ -5548,7 +5548,7 @@ var RequestError = class extends Error {
 
 /***/ }),
 
-/***/ 9236:
+/***/ 5418:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
@@ -5581,7 +5581,7 @@ var import_endpoint = __nccwpck_require__(8577);
 var import_universal_user_agent = __nccwpck_require__(7125);
 
 // pkg/dist-src/version.js
-var VERSION = "8.3.1";
+var VERSION = "8.4.0";
 
 // pkg/dist-src/is-plain-object.js
 function isPlainObject(value) {
@@ -5606,7 +5606,7 @@ function getBufferResponse(response) {
 
 // pkg/dist-src/fetch-wrapper.js
 function fetchWrapper(requestOptions) {
-  var _a, _b, _c;
+  var _a, _b, _c, _d;
   const log = requestOptions.request && requestOptions.request.log ? requestOptions.request.log : console;
   const parseSuccessResponseBody = ((_a = requestOptions.request) == null ? void 0 : _a.parseSuccessResponseBody) !== false;
   if (isPlainObject(requestOptions.body) || Array.isArray(requestOptions.body)) {
@@ -5627,8 +5627,9 @@ function fetchWrapper(requestOptions) {
   return fetch(requestOptions.url, {
     method: requestOptions.method,
     body: requestOptions.body,
+    redirect: (_c = requestOptions.request) == null ? void 0 : _c.redirect,
     headers: requestOptions.headers,
-    signal: (_c = requestOptions.request) == null ? void 0 : _c.signal,
+    signal: (_d = requestOptions.request) == null ? void 0 : _d.signal,
     // duplex must be set if request.body is ReadableStream or Async Iterables.
     // See https://fetch.spec.whatwg.org/#dom-requestinit-duplex.
     ...requestOptions.body && { duplex: "half" }
