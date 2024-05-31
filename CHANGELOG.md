@@ -12,6 +12,9 @@ This is an alpha version! The changes listed here are not final.
 ### Changed
 - Updated package dependencies.
 
+### Fixed
+- Don't request review from the PR author.
+
 ## [4.0.0] - 2024-02-07
 ### Added
 - Added support for GitHub Enterprise by replacing github.com with a dynamic variable [#32974]
