@@ -56,7 +56,7 @@ THE SOFTWARE.
 ---
 
 Name: undici
-Version: 6.28.0
+Version: 6.28.1
 License: MIT
 Private: false
 Description: An HTTP/1.1 client, written from scratch for Node.js
@@ -470,7 +470,7 @@ License Text:
 ---
 
 Name: @octokit/endpoint
-Version: 11.0.3
+Version: 11.0.5
 License: MIT
 Private: false
 Description: Turns REST API endpoints into generic request options
@@ -504,7 +504,7 @@ THE SOFTWARE.
 ---
 
 Name: content-type
-Version: 2.1.0
+Version: 3.0.0
 License: MIT
 Private: false
 Description: Create and parse HTTP Content-Type header
@@ -539,7 +539,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ---
 
 Name: json-with-bigint
-Version: 3.5.10
+Version: 3.5.12
 License: MIT
 Private: false
 Description: JS library that allows you to easily serialize and deserialize data with BigInt values
@@ -573,7 +573,7 @@ SOFTWARE.
 ---
 
 Name: @octokit/request-error
-Version: 7.1.0
+Version: 7.1.2
 License: MIT
 Private: false
 Description: Error class for Octokit request errors
@@ -607,7 +607,7 @@ THE SOFTWARE.
 ---
 
 Name: @octokit/request
-Version: 10.0.11
+Version: 10.0.16
 License: MIT
 Private: false
 Description: Send parameterized requests to GitHub's APIs with sensible defaults in browsers and Node
@@ -641,7 +641,7 @@ THE SOFTWARE.
 ---
 
 Name: @octokit/graphql
-Version: 9.0.3
+Version: 9.0.5
 License: MIT
 Private: false
 Description: GitHub GraphQL API client for browsers and Node
@@ -709,7 +709,7 @@ THE SOFTWARE.
 ---
 
 Name: @octokit/core
-Version: 7.0.6
+Version: 7.0.8
 License: MIT
 Private: false
 Description: Extendable client for GitHub's REST & GraphQL APIs
