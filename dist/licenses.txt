@@ -176,7 +176,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ---
 
 Name: js-yaml
-Version: 5.2.2
+Version: 5.4.1
 License: MIT
 Private: false
 Description: YAML 1.2 parser and serializer
