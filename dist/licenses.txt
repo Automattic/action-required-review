@@ -56,7 +56,7 @@ THE SOFTWARE.
 ---
 
 Name: undici
-Version: 6.28.1
+Version: 6.29.0
 License: MIT
 Private: false
 Description: An HTTP/1.1 client, written from scratch for Node.js
@@ -504,7 +504,7 @@ THE SOFTWARE.
 ---
 
 Name: content-type
-Version: 3.0.0
+Version: 3.1.1
 License: MIT
 Private: false
 Description: Create and parse HTTP Content-Type header
