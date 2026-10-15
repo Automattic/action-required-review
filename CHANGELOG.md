@@ -5,14 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [6.0.0-alpha] - unreleased
-
-This is an alpha version! The changes listed here are not final.
-
+## [6.0.0] - 2026-10-15
 ### Changed
-- Internal: No longer require automattic/jetpack-changelogger as a per-project dev dependency.
-- Update package dependencies.
-- Yaml parsing is more strict, due to a dependency update to `js-yaml` v5. If you get errors that your requirements file is not valid, check your syntax.
+- Internal: No longer require automattic/jetpack-changelogger as a per-project dev dependency. [#48225]
+- Update package dependencies. [#49012] [#49634] [#49828] [#50684] [#50812] [#50813] [#51665] [#52297] [#52948]
+- Yaml parsing is more strict, due to a dependency update to `js-yaml` v5. If you get errors that your requirements file is not valid, check your syntax. [#50812]
 
 ## [5.0.1] - 2026-04-13
 ### Changed
@@ -138,7 +135,7 @@ This is an alpha version! The changes listed here are not final.
 
 - Initial release
 
-[6.0.0-alpha]: https://github.com/Automattic/action-required-review/compare/v5.0.1...v6.0.0-alpha
+[6.0.0]: https://github.com/Automattic/action-required-review/compare/v5.0.1...v6.0.0
 [5.0.1]: https://github.com/Automattic/action-required-review/compare/v5.0.0...v5.0.1
 [5.0.0]: https://github.com/Automattic/action-required-review/compare/v4.1.2...v5.0.0
 [4.1.2]: https://github.com/Automattic/action-required-review/compare/v4.1.1...v4.1.2
